@@ -3,21 +3,21 @@
 import { Mongo } from 'meteor/mongo';
 import SimpleSchema from 'simpl-schema';
 
-const Documents = new Mongo.Collection('Documents');
+const UserSkills = new Mongo.Collection('UserSkills');
 
-Documents.allow({
+UserSkills.allow({
   insert: () => false,
   update: () => false,
   remove: () => false,
 });
 
-Documents.deny({
+UserSkills.deny({
   insert: () => true,
   update: () => true,
   remove: () => true,
 });
 
-Documents.schema = new SimpleSchema({
+UserSkills.schema = new SimpleSchema({
   owner: {
     type: String,
     label: 'The ID of the user this document belongs to.',
@@ -46,6 +46,6 @@ Documents.schema = new SimpleSchema({
   },
 });
 
-Documents.attachSchema(Documents.schema);
+UserSkills.attachSchema(UserSkills.schema);
 
-export default Documents;
+export default UserSkills;

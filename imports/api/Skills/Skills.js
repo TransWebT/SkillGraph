@@ -3,21 +3,21 @@
 import { Mongo } from 'meteor/mongo';
 import SimpleSchema from 'simpl-schema';
 
-const UserSkills = new Mongo.Collection('UserSkills');
+const Skills = new Mongo.Collection('Skills');
 
-UserSkills.allow({
+Skills.allow({
   insert: () => false,
   update: () => false,
   remove: () => false,
 });
 
-UserSkills.deny({
+Skills.deny({
   insert: () => true,
   update: () => true,
   remove: () => true,
 });
 
-UserSkills.schema = new SimpleSchema({
+Skills.schema = new SimpleSchema({
   owner: {
     type: String,
     label: 'The ID of the user this document belongs to.',
@@ -36,17 +36,20 @@ UserSkills.schema = new SimpleSchema({
       if (this.isInsert || this.isUpdate) return (new Date()).toISOString();
     },
   },
-  title: {
+  name: {
     type: String,
-    label: 'The title of the document.',
+    label: 'The skill name.',
   },
-  body: {
+  description: {
     type: String,
-    label: 'The body of the document.',
+    label: 'A description for the skill.',
   },
-
+  graphColor: {
+    type: String,
+    label: 'The graph color for this skill.',
+  },
 });
 
-UserSkills.attachSchema(UserSkills.schema);
+Skills.attachSchema(Skills.schema);
 
-export default UserSkills;
+export default Skills;

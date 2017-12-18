@@ -15,6 +15,14 @@ import Documents from '../../pages/Documents/Documents';
 import NewDocument from '../../pages/NewDocument/NewDocument';
 import ViewDocument from '../../pages/ViewDocument/ViewDocument';
 import EditDocument from '../../pages/EditDocument/EditDocument';
+import Skills from '../../pages/Skills/Skills';
+import NewSkill from '../../pages/NewSkill/NewSkill';
+import ViewSkill from '../../pages/ViewSkill/ViewSkill';
+import EditSkill from '../../pages/EditSkill/EditSkill';
+import UserSkills from '../../pages/UserSkills/UserSkills';
+import NewUserSkill from '../../pages/NewUserSkill/NewUserSkill';
+import ViewUserSkill from '../../pages/ViewUserSkill/ViewUserSkill';
+import EditUserSkill from '../../pages/EditUserSkill/EditUserSkill';
 import Signup from '../../pages/Signup/Signup';
 import Login from '../../pages/Login/Login';
 import Logout from '../../pages/Logout/Logout';
@@ -51,6 +59,14 @@ const App = props => (
             <Authenticated exact path="/documents/new" component={NewDocument} {...props} />
             <Authenticated exact path="/documents/:_id" component={ViewDocument} {...props} />
             <Authenticated exact path="/documents/:_id/edit" component={EditDocument} {...props} />
+            <Authenticated exact path="/skills" component={Skills} {...props} />
+            <Authenticated exact path="/skills/new" component={NewSkill} {...props} />
+            <Authenticated exact path="/skills/:_id" component={ViewSkill} {...props} />
+            <Authenticated exact path="/skills/:_id/edit" component={EditSkill} {...props} />
+            <Authenticated exact path="/userSkills" component={UserSkills} {...props} />
+            <Authenticated exact path="/userSkills/new" component={NewUserSkill} {...props} />
+            <Authenticated exact path="/userSkills/:_id" component={ViewUserSkill} {...props} />
+            <Authenticated exact path="/userSkills/:_id/edit" component={EditUserSkill} {...props} />
             <Authenticated exact path="/profile" component={Profile} {...props} />
             <Public path="/signup" component={Signup} {...props} />
             <Public path="/login" component={Login} {...props} />

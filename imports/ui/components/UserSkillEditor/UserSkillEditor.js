@@ -7,7 +7,7 @@ import { Meteor } from 'meteor/meteor';
 import { Bert } from 'meteor/themeteorchef:bert';
 import validate from '../../../modules/validate';
 
-class DocumentEditor extends React.Component {
+class UserSkillEditor extends React.Component {
   componentDidMount() {
     const component = this;
     validate(component.form, {
@@ -33,23 +33,23 @@ class DocumentEditor extends React.Component {
 
   handleSubmit() {
     const { history } = this.props;
-    const existingDocument = this.props.doc && this.props.doc._id;
-    const methodToCall = existingDocument ? 'documents.update' : 'documents.insert';
+    const existingUserSkill = this.props.doc && this.props.doc._id;
+    const methodToCall = existingUserSkill ? 'userSkills.update' : 'userSkills.insert';
     const doc = {
       title: this.title.value.trim(),
       body: this.body.value.trim(),
     };
 
-    if (existingDocument) doc._id = existingDocument;
+    if (existingUserSkill) doc._id = existingUserSkill;
 
-    Meteor.call(methodToCall, doc, (error, documentId) => {
+    Meteor.call(methodToCall, doc, (error, userSkillId) => {
       if (error) {
         Bert.alert(error.reason, 'danger');
       } else {
-        const confirmation = existingDocument ? 'Document updated!' : 'Document added!';
+        const confirmation = existingUserSkill ? 'UserSkill updated!' : 'UserSkill added!';
         this.form.reset();
         Bert.alert(confirmation, 'success');
-        history.push(`/documents/${documentId}`);
+        history.push(`/userSkills/${userSkillId}`);
       }
     });
   }
@@ -80,20 +80,20 @@ class DocumentEditor extends React.Component {
           />
         </FormGroup>
         <Button type="submit" bsStyle="success">
-          {doc && doc._id ? 'Save Changes' : 'Add Document'}
+          {doc && doc._id ? 'Save Changes' : 'Add UserSkill'}
         </Button>
       </form>
     );
   }
 }
 
-DocumentEditor.defaultProps = {
+UserSkillEditor.defaultProps = {
   doc: { title: '', body: '' },
 };
 
-DocumentEditor.propTypes = {
+UserSkillEditor.propTypes = {
   doc: PropTypes.object,
   history: PropTypes.object.isRequired,
 };
 
-export default DocumentEditor;
+export default UserSkillEditor;

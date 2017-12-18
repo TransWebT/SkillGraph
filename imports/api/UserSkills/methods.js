@@ -26,7 +26,7 @@ Meteor.methods({
     try {
       const userSkillId = doc._id;
       UserSkills.update(userSkillId, { $set: doc });
-      return userSkillId; // Return _id so we can redirect to document after update.
+      return userSkillId; // Return _id so we can redirect to userskill after update.
     } catch (exception) {
       throw new Meteor.Error('500', exception);
     }

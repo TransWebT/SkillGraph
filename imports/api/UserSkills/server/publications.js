@@ -6,7 +6,7 @@ Meteor.publish('userSkills', function userSkills() {
   return UserSkills.find({ owner: this.userId });
 });
 
-// Note: documents.view is also used when editing an existing document.
+// Note: userSkills.view is also used when editing an existing userSkill.
 Meteor.publish('userSkills.view', function userSkillsView(userSkillId) {
   check(userSkillId, String);
   return UserSkills.find({ _id: userSkillId, owner: this.userId });

@@ -12,19 +12,19 @@ class UserSkillEditor extends React.Component {
     const component = this;
     validate(component.form, {
       rules: {
-        title: {
+        skillId: {
           required: true,
         },
-        body: {
+        skillData: {
           required: true,
         },
       },
       messages: {
-        title: {
-          required: 'Need a title in here, Seuss.',
+        skillId: {
+          required: 'A skill must be selected to provide scores.',
         },
-        body: {
-          required: 'This thneeds a body, please.',
+        skillData: {
+          required: 'At least one data point is required.',
         },
       },
       submitHandler() { component.handleSubmit(); },
@@ -36,8 +36,8 @@ class UserSkillEditor extends React.Component {
     const existingUserSkill = this.props.doc && this.props.doc._id;
     const methodToCall = existingUserSkill ? 'userSkills.update' : 'userSkills.insert';
     const doc = {
-      title: this.title.value.trim(),
-      body: this.body.value.trim(),
+      skillId: this.skillId.value.trim(),
+      skillData: this.skillData,
     };
 
     if (existingUserSkill) doc._id = existingUserSkill;

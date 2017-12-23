@@ -17,6 +17,15 @@ UserSkills.deny({
   remove: () => true,
 });
 
+SkillDataPointSchema = new SimpleSchema({
+    evalDate: {
+        type: String
+    },
+    score: {
+        type: String
+    }
+})
+
 UserSkills.schema = new SimpleSchema({
   owner: {
     type: String,
@@ -36,15 +45,14 @@ UserSkills.schema = new SimpleSchema({
       if (this.isInsert || this.isUpdate) return (new Date()).toISOString();
     },
   },
-  title: {
-    type: String,
-    label: 'The title of the document.',
+  skillId: {
+    type: Skills.schema,
+    label: 'Skill',
   },
-  body: {
-    type: String,
-    label: 'The body of the document.',
-  },
-
+  skillData: {
+      type: [SkillDataPointSchema],
+      label: "Skill Data"
+  }
 });
 
 UserSkills.attachSchema(UserSkills.schema);

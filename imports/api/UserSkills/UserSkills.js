@@ -2,6 +2,7 @@
 
 import { Mongo } from 'meteor/mongo';
 import SimpleSchema from 'simpl-schema';
+import { Skills } from '/imports/api/Skills/Skills.js';
 
 const UserSkills = new Mongo.Collection('UserSkills');
 
@@ -17,14 +18,14 @@ UserSkills.deny({
   remove: () => true,
 });
 
-SkillDataPointSchema = new SimpleSchema({
+export const SkillDataPointSchema = new SimpleSchema({
     evalDate: {
         type: String
     },
     score: {
         type: String
     }
-})
+});
 
 UserSkills.schema = new SimpleSchema({
   owner: {
@@ -50,9 +51,12 @@ UserSkills.schema = new SimpleSchema({
     label: 'Skill',
   },
   skillData: {
-      type: [SkillDataPointSchema],
+      type: Array
+  },
+  'skillData.$': {
+      type: SkillDataPointSchema,
       label: "Skill Data"
-  }
+  },
 });
 
 UserSkills.attachSchema(UserSkills.schema);

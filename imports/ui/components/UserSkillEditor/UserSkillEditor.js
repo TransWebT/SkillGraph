@@ -107,6 +107,10 @@ class UserSkillEditor extends React.Component {
     });
   }
 
+  fetchSkills() {
+      // @@@
+  }
+
   invalidJobStatus(cell, row) {
     console.log(`${cell} at row id: ${row.id} fails on editing`);
     return 'invalid-jobstatus-class';
@@ -121,6 +125,7 @@ class UserSkillEditor extends React.Component {
 
   render() {
     const { doc } = this.props;
+    const { skills } = this.props;
     return (
         <BootstrapTable data={ jobs } cellEdit={ cellEditProp } insertRow={ true }>
              <TableHeaderColumn dataField='id' isKey={ true }>Job ID</TableHeaderColumn>

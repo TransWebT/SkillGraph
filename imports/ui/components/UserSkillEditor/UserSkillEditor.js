@@ -84,6 +84,12 @@ class UserSkillEditor extends React.Component {
     });
   }
 
+  getSkillNames() {
+      const { skills } = this.props;
+      const skillNames = skills.map(function(a) {return a.name;});
+      return skillNames;
+  }
+
   handleSubmit() {
     const { history } = this.props;
     const existingUserSkill = this.props.doc && this.props.doc._id;
@@ -107,10 +113,6 @@ class UserSkillEditor extends React.Component {
     });
   }
 
-  fetchSkills() {
-      // @@@
-  }
-
   invalidJobStatus(cell, row) {
     console.log(`${cell} at row id: ${row.id} fails on editing`);
     return 'invalid-jobstatus-class';
@@ -131,7 +133,7 @@ class UserSkillEditor extends React.Component {
              <TableHeaderColumn dataField='id' isKey={ true }>Job ID</TableHeaderColumn>
              <TableHeaderColumn dataField='status' editable={ { validator: jobStatusValidator } } editColumnClassName={ this.editingJobStatus } invalidEditColumnClassName={ this.invalidJobStatus }>Job Status</TableHeaderColumn>
              <TableHeaderColumn dataField='name' editable={ { type: 'textarea', validator: jobNameValidator } } editColumnClassName='editing-jobsname-class' invalidEditColumnClassName='invalid-jobsname-class'>Job Name</TableHeaderColumn>
-             <TableHeaderColumn dataField='type' editable={ { type: 'select', options: { values: jobTypes } } }>Job Type</TableHeaderColumn>
+             <TableHeaderColumn dataField='type' editable={ { type: 'select', options: { values: this.getSkillNames() } } }>Job Type</TableHeaderColumn>
              <TableHeaderColumn dataField='active' editable={ { type: 'checkbox', options: { values: 'Y:N' } } }>Active</TableHeaderColumn>
    </BootstrapTable>
     );

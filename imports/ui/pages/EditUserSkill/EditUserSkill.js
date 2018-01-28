@@ -7,6 +7,9 @@ import UserSkills from '../../../api/UserSkills/UserSkills';
 import UserSkillEditor from '../../components/UserSkillEditor/UserSkillEditor';
 import NotFound from '../NotFound/NotFound';
 
+// ToDo:
+// Base the editor of user skill data on this.
+// Use a table for the skill date (year/month) and skill score pairs
 const EditUserSkill = ({ doc, skills, history }) => (doc ? (
   <div className="EditUserSkill">
     <h4 className="page-header">{`Editing "${doc.title}"`}</h4>

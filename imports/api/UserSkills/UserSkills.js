@@ -23,7 +23,7 @@ export const SkillDataPointSchema = new SimpleSchema({
         type: String
     },
     score: {
-        type: String
+        type: Number
     }
 });
 

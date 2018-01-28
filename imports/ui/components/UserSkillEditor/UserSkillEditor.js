@@ -9,6 +9,8 @@ import { FormGroup, ControlLabel, Button } from 'react-bootstrap';
 import { Meteor } from 'meteor/meteor';
 import { Bert } from 'meteor/themeteorchef:bert';
 import validate from '../../../modules/validate';
+import Select from 'react-select';
+import 'react-select/dist/react-select.css';
 
 const jobs = [];
 const jobTypes = [ 'A', 'B', 'C', 'D' ];
@@ -21,7 +23,7 @@ function addJobs(quantity) {
       id: id,
       status: '200',
       name: 'Item name ' + id,
-      type: 'B',
+      type: 'Java',
       active: i % 2 === 0 ? 'Y' : 'N'
     });
   }
@@ -61,8 +63,15 @@ function jobStatusValidator(value) {
 
 
 class UserSkillEditor extends React.Component {
+  constructor(props){
+     super(props);
+     this.state = { selectedOption: '' };
+   }
+
+
   componentDidMount() {
     const component = this;
+
     validate(component.form, {
       rules: {
         skillId: {
@@ -84,6 +93,11 @@ class UserSkillEditor extends React.Component {
     });
   }
 
+  handleChange(selectedOption) {
+    // this.setState({ selectedOption: selectedOption });
+    console.log(`Selected: ${selectedOption.label}`);
+  }
+
   getSkillNames() {
       const { skills } = this.props;
       const skillNames = skills.map(function(a) {return a.name;});
@@ -91,6 +105,7 @@ class UserSkillEditor extends React.Component {
   }
 
   handleSubmit() {
+    // TODO: Add test select variable handling here
     const { history } = this.props;
     const existingUserSkill = this.props.doc && this.props.doc._id;
     const methodToCall = existingUserSkill ? 'userSkills.update' : 'userSkills.insert';
@@ -128,14 +143,51 @@ class UserSkillEditor extends React.Component {
   render() {
     const { doc } = this.props;
     const { skills } = this.props;
+
+    const { selectedOption } = this.state;
+  	const value = selectedOption && selectedOption.value;
+
     return (
-        <BootstrapTable data={ jobs } cellEdit={ cellEditProp } insertRow={ true }>
-             <TableHeaderColumn dataField='id' isKey={ true }>Job ID</TableHeaderColumn>
-             <TableHeaderColumn dataField='status' editable={ { validator: jobStatusValidator } } editColumnClassName={ this.editingJobStatus } invalidEditColumnClassName={ this.invalidJobStatus }>Job Status</TableHeaderColumn>
-             <TableHeaderColumn dataField='name' editable={ { type: 'textarea', validator: jobNameValidator } } editColumnClassName='editing-jobsname-class' invalidEditColumnClassName='invalid-jobsname-class'>Job Name</TableHeaderColumn>
-             <TableHeaderColumn dataField='type' editable={ { type: 'select', options: { values: this.getSkillNames() } } }>Job Type</TableHeaderColumn>
-             <TableHeaderColumn dataField='active' editable={ { type: 'checkbox', options: { values: 'Y:N' } } }>Active</TableHeaderColumn>
-   </BootstrapTable>
+      <form ref={form => (this.form = form)} onSubmit={event => event.preventDefault()}>
+        <FormGroup>
+          <ControlLabel>Title</ControlLabel>
+          <input
+            type="text"
+            className="form-control"
+            name="title"
+            ref={title => (this.title = title)}
+            defaultValue={doc && doc.title}
+            placeholder="Oh, The Places You'll Go!"
+          />
+        </FormGroup>
+
+        <FormGroup>
+          <ControlLabel>Title</ControlLabel>
+          <Select
+                name="form-field-name"
+                value={value}
+                onChange={this.handleChange}
+                options={[
+                  { value: 'one', label: 'One' },
+                  { value: 'two', label: 'Two' },
+                ]}
+              />
+        </FormGroup>
+
+        <FormGroup>
+          <ControlLabel>Body</ControlLabel>
+          <textarea
+            className="form-control"
+            name="body"
+            ref={body => (this.body = body)}
+            defaultValue={doc && doc.body}
+            placeholder="Congratulations! Today is your day. You're off to Great Places! You're off and away!"
+          />
+        </FormGroup>
+        <Button type="submit" bsStyle="success">
+          {doc && doc._id ? 'Save Changes' : 'Add UserSkill'}
+        </Button>
+      </form>
     );
   }
 }
@@ -153,6 +205,14 @@ export default UserSkillEditor;
 
 
 {/*
+  // replace jobs below with userSkills - an array of userSkill rows
+    <BootstrapTable data={ doc } cellEdit={ cellEditProp } insertRow={ true }>
+         <TableHeaderColumn dataField='_id' isKey={ true }>User Skill ID</TableHeaderColumn>
+         <TableHeaderColumn dataField='status' editable={ { validator: jobStatusValidator } } editColumnClassName={ this.editingJobStatus } invalidEditColumnClassName={ this.invalidJobStatus }>Job Status</TableHeaderColumn>
+         <TableHeaderColumn dataField='name' editable={ { type: 'textarea', validator: jobNameValidator } } editColumnClassName='editing-jobsname-class' invalidEditColumnClassName='invalid-jobsname-class'>Job Name</TableHeaderColumn>
+         <TableHeaderColumn dataField='type' editable={ { type: 'select', options: { values: this.getSkillNames() } } }>Job Type</TableHeaderColumn>
+         <TableHeaderColumn dataField='active' editable={ { type: 'checkbox', options: { values: 'Y:N' } } }>Active</TableHeaderColumn>
+</BootstrapTable>
 
     <form ref={form => (this.form = form)} onSubmit={event => event.preventDefault()}>
       <FormGroup>

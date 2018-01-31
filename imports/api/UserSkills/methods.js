@@ -3,6 +3,7 @@ import { check } from 'meteor/check';
 import UserSkills from './UserSkills';
 import rateLimit from '../../modules/rate-limit';
 
+// TODO: update this to follow new schema
 Meteor.methods({
   'userSkills.insert': function userSkillsInsert(doc) {
     check(doc, {

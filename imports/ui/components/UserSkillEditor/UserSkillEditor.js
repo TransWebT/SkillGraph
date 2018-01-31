@@ -66,6 +66,7 @@ class UserSkillEditor extends React.Component {
   constructor(props){
      super(props);
      this.state = { selectedOption: '' };
+     this.handleChange = this.handleChange.bind(this);
    }
 
 
@@ -94,7 +95,7 @@ class UserSkillEditor extends React.Component {
   }
 
   handleChange(selectedOption) {
-    // this.setState({ selectedOption: selectedOption });
+    this.setState({ selectedOption });
     console.log(`Selected: ${selectedOption.label}`);
   }
 
@@ -104,13 +105,22 @@ class UserSkillEditor extends React.Component {
       return skillNames;
   }
 
+  // TODO this should return an array of objects with value/label keys for Select
+  getSkillOptions() {
+      const { skills } = this.props;
+      const skillNames = skills.map(function(a) {
+        return {value: a._id, label: a.name}
+      });
+      return skillNames;
+  }
+
   handleSubmit() {
     // TODO: Add test select variable handling here
     const { history } = this.props;
     const existingUserSkill = this.props.doc && this.props.doc._id;
     const methodToCall = existingUserSkill ? 'userSkills.update' : 'userSkills.insert';
     const doc = {
-      skillId: this.skillId.value.trim(),
+      skillId: this.state.selectedOption.value.trim(),
       skillData: this.skillData,
     };
 
@@ -144,11 +154,14 @@ class UserSkillEditor extends React.Component {
     const { doc } = this.props;
     const { skills } = this.props;
 
-    const { selectedOption } = this.state;
-  	const value = selectedOption && selectedOption.value;
+    // const { selectedOption } = doc.skillId;
+  	// const value = selectedOption && selectedOption.value;
+    // const value = doc && doc.skillId;
+    const value = this.state.selectedOption.value;
 
     return (
       <form ref={form => (this.form = form)} onSubmit={event => event.preventDefault()}>
+      {/*
         <FormGroup>
           <ControlLabel>Title</ControlLabel>
           <input
@@ -160,6 +173,7 @@ class UserSkillEditor extends React.Component {
             placeholder="Oh, The Places You'll Go!"
           />
         </FormGroup>
+        */}
 
         <FormGroup>
           <ControlLabel>Title</ControlLabel>
@@ -167,23 +181,10 @@ class UserSkillEditor extends React.Component {
                 name="form-field-name"
                 value={value}
                 onChange={this.handleChange}
-                options={[
-                  { value: 'one', label: 'One' },
-                  { value: 'two', label: 'Two' },
-                ]}
+                options={this.getSkillOptions()}
               />
         </FormGroup>
 
-        <FormGroup>
-          <ControlLabel>Body</ControlLabel>
-          <textarea
-            className="form-control"
-            name="body"
-            ref={body => (this.body = body)}
-            defaultValue={doc && doc.body}
-            placeholder="Congratulations! Today is your day. You're off to Great Places! You're off and away!"
-          />
-        </FormGroup>
         <Button type="submit" bsStyle="success">
           {doc && doc._id ? 'Save Changes' : 'Add UserSkill'}
         </Button>
@@ -193,7 +194,7 @@ class UserSkillEditor extends React.Component {
 }
 
 UserSkillEditor.defaultProps = {
-  doc: { title: '', body: '' },
+  doc: { skillId: '', skillData: [] },
 };
 
 UserSkillEditor.propTypes = {

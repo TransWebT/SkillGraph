@@ -7,8 +7,7 @@ import rateLimit from '../../modules/rate-limit';
 Meteor.methods({
   'userSkills.insert': function userSkillsInsert(doc) {
     check(doc, {
-      title: String,
-      body: String,
+      skillId: String,
     });
 
     try {
@@ -20,8 +19,7 @@ Meteor.methods({
   'userSkills.update': function userSkillsUpdate(doc) {
     check(doc, {
       _id: String,
-      title: String,
-      body: String,
+      skillId: String,
     });
 
     try {

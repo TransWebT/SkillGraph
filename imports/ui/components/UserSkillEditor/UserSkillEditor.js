@@ -78,17 +78,21 @@ class UserSkillEditor extends React.Component {
         skillId: {
           required: true,
         },
+        /*
         skillData: {
           required: true,
         },
+        */
       },
       messages: {
         skillId: {
           required: 'A skill must be selected to provide scores.',
         },
+        /*
         skillData: {
           required: 'At least one data point is required.',
         },
+        */
       },
       submitHandler() { component.handleSubmit(); },
     });
@@ -121,7 +125,11 @@ class UserSkillEditor extends React.Component {
     const methodToCall = existingUserSkill ? 'userSkills.update' : 'userSkills.insert';
     const doc = {
       skillId: this.state.selectedOption.value.trim(),
-      skillData: this.skillData,
+      skillData: [
+        { evalDate: new Date().toString(), score: 5 },
+        { evalDate: new Date().toString(), score: 2 },
+        { evalDate: new Date().toString(), score: 8 },
+      ],
     };
 
     if (existingUserSkill) doc._id = existingUserSkill;
@@ -194,6 +202,7 @@ class UserSkillEditor extends React.Component {
 }
 
 UserSkillEditor.defaultProps = {
+  // doc: { skillId: ''},
   doc: { skillId: '', skillData: [] },
 };
 

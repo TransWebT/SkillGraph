@@ -47,16 +47,15 @@ UserSkills.schema = new SimpleSchema({
     },
   },
   skillId: {
-    type: Skills.schema,
+    type: String,
     label: 'Skill',
   },
   skillData: {
       type: Array
   },
   'skillData.$': {
-      type: SkillDataPointSchema,
-      label: "Skill Data"
-  },
+    type: SkillDataPointSchema
+  }
 });
 
 UserSkills.attachSchema(UserSkills.schema);

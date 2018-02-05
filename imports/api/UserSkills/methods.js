@@ -8,6 +8,7 @@ Meteor.methods({
   'userSkills.insert': function userSkillsInsert(doc) {
     check(doc, {
       skillId: String,
+      skillData: Array
     });
 
     try {

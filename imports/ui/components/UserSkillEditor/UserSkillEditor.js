@@ -1,7 +1,8 @@
 /* eslint-disable max-len, no-return-assign */
 
-import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
-import '../../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
+import BootstrapTable from 'react-bootstrap-table-next';
+import cellEditFactory from 'react-bootstrap-table2-editor';
+import '../../../../node_modules/react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -30,11 +31,6 @@ function addJobs(quantity) {
 }
 
 addJobs(5);
-
-const cellEditProp = {
-  mode: 'click',
-  blurToSave: true
-};
 
 // validator function pass the user input value and should return true|false.
 function jobNameValidator(value) {
@@ -67,6 +63,13 @@ class UserSkillEditor extends React.Component {
      super(props);
      this.state = { selectedOption: '' };
      this.handleChange = this.handleChange.bind(this);
+
+     const cellEditProp = {
+       mode: 'click',
+       blurToSave: true
+     };
+
+     
    }
 
 
@@ -109,7 +112,6 @@ class UserSkillEditor extends React.Component {
       return skillNames;
   }
 
-  // TODO this should return an array of objects with value/label keys for Select
   getSkillOptions() {
       const { skills } = this.props;
       const skillNames = skills.map(function(a) {
@@ -191,6 +193,16 @@ class UserSkillEditor extends React.Component {
                 onChange={this.handleChange}
                 options={this.getSkillOptions()}
               />
+        </FormGroup>
+
+        <FormGroup>
+          <ControlLabel>Title</ControlLabel>
+          <BootstrapTable
+            keyField = "_id"
+            data={ doc.userSkills }
+            columns={ /* @@@ COLUMNS DEFINED HERE */ }
+            cellEdit={ cellEditFactory(cellEditProp) }
+            insertRow={ true } />
         </FormGroup>
 
         <Button type="submit" bsStyle="success">

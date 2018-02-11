@@ -59,7 +59,7 @@ function jobStatusValidator(value) {
 
 
 class UserSkillEditor extends React.Component {
-  constructor(props){
+  constructor(props) {
      super(props);
      this.state = { selectedOption: '' };
      this.handleChange = this.handleChange.bind(this);
@@ -69,12 +69,17 @@ class UserSkillEditor extends React.Component {
        blurToSave: true
      };
 
-     
+
    }
+
+
+
 
 
   componentDidMount() {
     const component = this;
+
+console.log(this.columns);
 
     validate(component.form, {
       rules: {
@@ -112,6 +117,21 @@ class UserSkillEditor extends React.Component {
       return skillNames;
   }
 
+  getSkillDataPointColumns() {
+    return [
+      {
+        dataField: "evalDate",
+        text: "Eval Date",
+        editable: true
+      },
+      {
+        dataField: "score",
+        text: "Score (1 - 10)",
+        editable: true
+      }
+    ];
+  }
+
   getSkillOptions() {
       const { skills } = this.props;
       const skillNames = skills.map(function(a) {
@@ -121,7 +141,6 @@ class UserSkillEditor extends React.Component {
   }
 
   handleSubmit() {
-    // TODO: Add test select variable handling here
     const { history } = this.props;
     const existingUserSkill = this.props.doc && this.props.doc._id;
     const methodToCall = existingUserSkill ? 'userSkills.update' : 'userSkills.insert';
@@ -169,6 +188,9 @@ class UserSkillEditor extends React.Component {
     // const value = doc && doc.skillId;
     const value = this.state.selectedOption.value;
 
+    // ToDo: in JS debugger, find value of this.cellEditProp within return().
+    // ToDo: reactive table needs prop for adding new rows.
+    // ToDo: reactive table evalDate field needs to be a selector for YYYY-MM
     return (
       <form ref={form => (this.form = form)} onSubmit={event => event.preventDefault()}>
       {/*
@@ -199,9 +221,9 @@ class UserSkillEditor extends React.Component {
           <ControlLabel>Title</ControlLabel>
           <BootstrapTable
             keyField = "_id"
-            data={ doc.userSkills }
-            columns={ /* @@@ COLUMNS DEFINED HERE */ }
-            cellEdit={ cellEditFactory(cellEditProp) }
+            data={ doc.skillData }
+            columns={ this.getSkillDataPointColumns() }
+            cellEdit={ cellEditFactory(this.cellEditProp) }
             insertRow={ true } />
         </FormGroup>
 

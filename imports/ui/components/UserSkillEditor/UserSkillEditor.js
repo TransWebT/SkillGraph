@@ -4,6 +4,9 @@ import BootstrapTable from 'react-bootstrap-table-next';
 import cellEditFactory from 'react-bootstrap-table2-editor';
 import '../../../../node_modules/react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 
+import ReactDataGrid from 'react-data-grid';
+// import { Editors, Formatters} from 'react-data-grid-addons';
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import { FormGroup, ControlLabel, Button } from 'react-bootstrap';
@@ -63,23 +66,44 @@ class UserSkillEditor extends React.Component {
      super(props);
      this.state = { selectedOption: '' };
      this.handleChange = this.handleChange.bind(this);
+     this.rowGetter = this.rowGetter.bind(this);
 
      const cellEditProp = {
        mode: 'click',
        blurToSave: true
      };
 
+     this.createRows();
+      this._columns = [
+        { key: 'id', name: 'ID' },
+        { key: 'title', name: 'Title' },
+        { key: 'count', name: 'Count' } ];
 
    }
 
+   // these funcs for ReactDataGrid
+   createRows() {
+      let rows = [];
+      for (let i = 1; i < 1000; i++) {
+        rows.push({
+          id: i,
+          title: 'Title ' + i,
+          count: i * 1000
+        });
+      }
+
+      this._rows = rows;
+    };
+
+    rowGetter(i) {
+      return this._rows[i];
+    };
 
 
 
 
   componentDidMount() {
     const component = this;
-
-console.log(this.columns);
 
     validate(component.form, {
       rules: {
@@ -226,6 +250,16 @@ console.log(this.columns);
             cellEdit={ cellEditFactory(this.cellEditProp) }
             insertRow={ true } />
         </FormGroup>
+
+
+        <FormGroup>
+        <ReactDataGrid
+            columns={this._columns}
+            rowGetter={this.rowGetter}
+            rowsCount={this._rows.length}
+            minHeight={500} />
+        </FormGroup>
+
 
         <Button type="submit" bsStyle="success">
           {doc && doc._id ? 'Save Changes' : 'Add UserSkill'}

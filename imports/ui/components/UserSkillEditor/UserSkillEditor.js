@@ -1,9 +1,5 @@
 /* eslint-disable max-len, no-return-assign */
 
-import BootstrapTable from 'react-bootstrap-table-next';
-import cellEditFactory from 'react-bootstrap-table2-editor';
-import '../../../../node_modules/react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import { FormGroup, ControlLabel, Button } from 'react-bootstrap';
@@ -13,23 +9,9 @@ import validate from '../../../modules/validate';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 
-
-//const PropTypes = require('prop-types');
-// next line is only required until ron-react-autocomplete is rebuilt and republished
-PropTypes.component = PropTypes.element;
-require('react').PropTypes = PropTypes;
-require('react').createClass = require('create-react-class');
-import ReactDataGrid from 'react-data-grid';
-const { AutoComplete: AutoCompleteEditor, DropDownEditor } = Editors;
-
-import { Editors, Formatters} from 'react-data-grid-addons';
-const { DropDownFormatter } = Formatters;
-
-// import update from 'immutability-helper';
-// options for priorities autocomplete editor
-const priorities = [{ id: 0, title: 'Critical' }, { id: 1, title: 'High' }, { id: 2, title: 'Medium' }, { id: 3, title: 'Low'} ];
-const PrioritiesEditor = <AutoCompleteEditor options={priorities} />;
-
+import BootstrapTable from 'react-bootstrap-table-next';
+import cellEditFactory from 'react-bootstrap-table2-editor';
+import '../../../../node_modules/react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 
 const jobs = [];
 const jobTypes = [ 'A', 'B', 'C', 'D' ];
@@ -80,79 +62,17 @@ class UserSkillEditor extends React.Component {
   constructor(props) {
      super(props);
      this.handleChange = this.handleChange.bind(this);
-     this.rowGetter = this.rowGetter.bind(this);
-     this.handleGridRowsUpdated = this.handleGridRowsUpdated.bind(this);
 
      const cellEditProp = {
        mode: 'click',
        blurToSave: true
      };
 
-     this._columns = [
-        {
-          key: 'id',
-          name: 'ID',
-          width: 80
-        },
-        {
-          key: 'task',
-          name: 'Title',
-          editable: true
-        },
-        {
-          key: 'priority',
-          name: 'Priority',
-          editor: PrioritiesEditor
-        },
-        {
-          key: 'issueType',
-          name: 'Issue Type',
-          editor: IssueTypesEditor,
-          formatter: IssueTypesFormatter
-        }
-      ];
-
-     this.createRows();
      this.state = {
        selectedOption: '',
-       rows: this.createRows(1000)
       };
 
    }
-
-   // these funcs for ReactDataGrid
-   createRows(numberOfRows) {
-       let rows = [];
-       for (let i = 1; i < numberOfRows; i++) {
-         rows.push({
-           id: i,
-           task: 'Task ' + i,
-           priority: ['Critical', 'High', 'Medium', 'Low'][Math.floor((Math.random() * 3) + 1)],
-           issueType: ['Bug', 'Improvement', 'Epic', 'Story'][Math.floor((Math.random() * 3) + 1)],
-         });
-       }
-
-       return rows;
-     }
-
-     rowGetter(i) {
-       return this.state.rows[i];
-     }
-
-    handleGridRowsUpdated({ fromRow, toRow, updated })
-    {
-        let rows = this.state.rows.slice();
-
-        for (let i = fromRow; i <= toRow; i++) {
-          let rowToUpdate = rows[i];
-          let updatedRow = update(rowToUpdate, {$merge: updated});
-          rows[i] = updatedRow;
-        }
-
-        this.setState({ rows });
-    };
-
-
 
   componentDidMount() {
     const component = this;
@@ -302,18 +222,6 @@ class UserSkillEditor extends React.Component {
             cellEdit={ cellEditFactory(this.cellEditProp) }
             insertRow={ true } />
         </FormGroup>
-
-
-        <FormGroup>
-        <ReactDataGrid
-            enableCellSelect={true}
-            columns={this._columns}
-            rowGetter={this.rowGetter}
-            rowsCount={this.state.rows.length}
-            minHeight={500}
-            onGridRowsUpdated={this.handleGridRowsUpdated} />
-        </FormGroup>
-
 
         <Button type="submit" bsStyle="success">
           {doc && doc._id ? 'Save Changes' : 'Add UserSkill'}

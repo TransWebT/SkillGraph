@@ -9,7 +9,7 @@ import validate from '../../../modules/validate';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 
-import BootstrapTable from 'react-bootstrap-table-next';
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table-next';
 import cellEditFactory from 'react-bootstrap-table2-editor';
 import '../../../../node_modules/react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 
@@ -214,13 +214,15 @@ class UserSkillEditor extends React.Component {
         </FormGroup>
 
         <FormGroup>
-          <ControlLabel>Title</ControlLabel>
-          <BootstrapTable
-            keyField = "_id"
-            data={ doc.skillData }
-            columns={ this.getSkillDataPointColumns() }
-            cellEdit={ cellEditFactory(this.cellEditProp) }
-            insertRow={ true } />
+            <ControlLabel>Title</ControlLabel>
+            <BootstrapTable
+                data={ doc.skillData }
+                cellEdit={ this.cellEditProp }
+                insertRow={ true }>
+                <TableHeaderColumn dataField='id' isKey={ true }>Skill Data point Id</TableHeaderColumn>
+                <TableHeaderColumn dataField='evalDate' editable={ true }>Eval Date</TableHeaderColumn>
+                <TableHeaderColumn dataField='score'>Score</TableHeaderColumn>
+            </BootstrapTable>
         </FormGroup>
 
         <Button type="submit" bsStyle="success">
@@ -253,6 +255,14 @@ export default UserSkillEditor;
          <TableHeaderColumn dataField='type' editable={ { type: 'select', options: { values: this.getSkillNames() } } }>Job Type</TableHeaderColumn>
          <TableHeaderColumn dataField='active' editable={ { type: 'checkbox', options: { values: 'Y:N' } } }>Active</TableHeaderColumn>
 </BootstrapTable>
+
+<BootstrapTable
+  keyField = "_id"
+  data={ doc.skillData }
+  columns={ this.getSkillDataPointColumns() }
+  cellEdit={ cellEditFactory(this.cellEditProp) }
+  insertRow={ true } />
+
 
     <form ref={form => (this.form = form)} onSubmit={event => event.preventDefault()}>
       <FormGroup>

@@ -9,63 +9,36 @@ import validate from '../../../modules/validate';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 
-import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table-next';
-import cellEditFactory from 'react-bootstrap-table2-editor';
-import '../../../../node_modules/react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
+import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 
-const jobs = [];
-const jobTypes = [ 'A', 'B', 'C', 'D' ];
+const testSkillData = [
+    { id: 1, evalDate: '12/1987', score: 5 },
+    { id: 2, evalDate: '5/1994', score: 2 },
+    { id: 3, evalDate: '9/2012', score: 8 },
+    { id: 4, evalDate: '3/2018', score: 6 }
+];
 
-function addJobs(quantity) {
-  const startId = jobs.length;
-  for (let i = 0; i < quantity; i++) {
-    const id = startId + i;
-    jobs.push({
-      id: id,
-      status: '200',
-      name: 'Item name ' + id,
-      type: 'Java',
-      active: i % 2 === 0 ? 'Y' : 'N'
-    });
-  }
+function onAfterDeleteRow(rowKeys, rows) {
+  alert('The rowkey you drop: ' + rowKeys);
 }
 
-addJobs(5);
-
-// validator function pass the user input value and should return true|false.
-function jobNameValidator(value) {
-  const response = { isValid: true, notification: { type: 'success', msg: '', title: '' } };
-  if (!value) {
-    response.isValid = false;
-    response.notification.type = 'error';
-    response.notification.msg = 'Value must be inserted';
-    response.notification.title = 'Requested Value';
-  } else if (value.length < 10) {
-    response.isValid = false;
-    response.notification.type = 'error';
-    response.notification.msg = 'Value must have 10+ characters';
-    response.notification.title = 'Invalid Value';
-  }
-  return response;
-}
-
-function jobStatusValidator(value) {
-  const nan = isNaN(parseInt(value, 10));
-  if (nan) {
-    return 'Job Status must be a integer!';
-  }
-  return true;
-}
-
+const options = {
+  afterDeleteRow: onAfterDeleteRow  // A hook for after droping rows.
+};
 
 class UserSkillEditor extends React.Component {
   constructor(props) {
      super(props);
      this.handleChange = this.handleChange.bind(this);
 
-     const cellEditProp = {
+     this.cellEditProp = {
        mode: 'click',
        blurToSave: true
+     };
+
+     this.selectRowProp = {
+       mode: 'checkbox'
      };
 
      this.state = {
@@ -105,27 +78,6 @@ class UserSkillEditor extends React.Component {
   handleChange(selectedOption) {
     this.setState({ selectedOption });
     console.log(`Selected: ${selectedOption.label}`);
-  }
-
-  getSkillNames() {
-      const { skills } = this.props;
-      const skillNames = skills.map(function(a) {return a.name;});
-      return skillNames;
-  }
-
-  getSkillDataPointColumns() {
-    return [
-      {
-        dataField: "evalDate",
-        text: "Eval Date",
-        editable: true
-      },
-      {
-        dataField: "score",
-        text: "Score (1 - 10)",
-        editable: true
-      }
-    ];
   }
 
   getSkillOptions() {
@@ -184,25 +136,14 @@ class UserSkillEditor extends React.Component {
     // const value = doc && doc.skillId;
     const value = this.state.selectedOption.value;
 
-    // ToDo: in JS debugger, find value of this.cellEditProp within return().
-    // ToDo: reactive table needs prop for adding new rows.
-    // ToDo: reactive table evalDate field needs to be a selector for YYYY-MM
+    // ToDo: reactive table evalDate field needs to be a selector for MM-YYYY - consider cellEdit example
+    //    Date picker candidates:
+    //       https://github.com/airbnb/react-dates
+    //       https://github.com/Hacker0x01/react-datepicker
+    //    Custom field example (note exporting of main class):
+    //       https://github.com/AllenFang/react-bootstrap-table/blob/master/examples/js/column-format/react-column-format-table.js
     return (
       <form ref={form => (this.form = form)} onSubmit={event => event.preventDefault()}>
-      {/*
-        <FormGroup>
-          <ControlLabel>Title</ControlLabel>
-          <input
-            type="text"
-            className="form-control"
-            name="title"
-            ref={title => (this.title = title)}
-            defaultValue={doc && doc.title}
-            placeholder="Oh, The Places You'll Go!"
-          />
-        </FormGroup>
-        */}
-
         <FormGroup>
           <ControlLabel>Title</ControlLabel>
           <Select
@@ -216,11 +157,15 @@ class UserSkillEditor extends React.Component {
         <FormGroup>
             <ControlLabel>Title</ControlLabel>
             <BootstrapTable
-                data={ doc.skillData }
+                data= { testSkillData }
+                insertRow={ true }
                 cellEdit={ this.cellEditProp }
-                insertRow={ true }>
+                deleteRow={ true }
+                selectRow={ this.selectRowProp }
+                options={ options }
+            >
                 <TableHeaderColumn dataField='id' isKey={ true }>Skill Data point Id</TableHeaderColumn>
-                <TableHeaderColumn dataField='evalDate' editable={ true }>Eval Date</TableHeaderColumn>
+                <TableHeaderColumn dataField='evalDate'>Eval Date (MM/YYYY)</TableHeaderColumn>
                 <TableHeaderColumn dataField='score'>Score</TableHeaderColumn>
             </BootstrapTable>
         </FormGroup>
@@ -234,7 +179,6 @@ class UserSkillEditor extends React.Component {
 }
 
 UserSkillEditor.defaultProps = {
-  // doc: { skillId: ''},
   doc: { skillId: '', skillData: [] },
 };
 
@@ -247,7 +191,56 @@ export default UserSkillEditor;
 
 
 {/*
-  // replace jobs below with userSkills - an array of userSkill rows
+    const jobs = [];
+    const jobTypes = [ 'A', 'B', 'C', 'D' ];
+
+    function addJobs(quantity) {
+      const startId = jobs.length;
+      for (let i = 0; i < quantity; i++) {
+        const id = startId + i;
+        jobs.push({
+          id: id,
+          status: '200',
+          name: 'Item name ' + id,
+          type: 'Java',
+          active: i % 2 === 0 ? 'Y' : 'N'
+        });
+      }
+    }
+    addJobs(5);
+
+    // validator function pass the user input value and should return true|false.
+    function jobNameValidator(value) {
+      const response = { isValid: true, notification: { type: 'success', msg: '', title: '' } };
+      if (!value) {
+        response.isValid = false;
+        response.notification.type = 'error';
+        response.notification.msg = 'Value must be inserted';
+        response.notification.title = 'Requested Value';
+      } else if (value.length < 10) {
+        response.isValid = false;
+        response.notification.type = 'error';
+        response.notification.msg = 'Value must have 10+ characters';
+        response.notification.title = 'Invalid Value';
+      }
+      return response;
+    }
+
+    function jobStatusValidator(value) {
+      const nan = isNaN(parseInt(value, 10));
+      if (nan) {
+        return 'Job Status must be a integer!';
+      }
+      return true;
+    }
+
+      getSkillNames() {
+          const { skills } = this.props;
+          const skillNames = skills.map(function(a) {return a.name;});
+          return skillNames;
+      }
+
+
     <BootstrapTable data={ doc } cellEdit={ cellEditProp } insertRow={ true }>
          <TableHeaderColumn dataField='_id' isKey={ true }>User Skill ID</TableHeaderColumn>
          <TableHeaderColumn dataField='status' editable={ { validator: jobStatusValidator } } editColumnClassName={ this.editingJobStatus } invalidEditColumnClassName={ this.invalidJobStatus }>Job Status</TableHeaderColumn>
@@ -255,39 +248,4 @@ export default UserSkillEditor;
          <TableHeaderColumn dataField='type' editable={ { type: 'select', options: { values: this.getSkillNames() } } }>Job Type</TableHeaderColumn>
          <TableHeaderColumn dataField='active' editable={ { type: 'checkbox', options: { values: 'Y:N' } } }>Active</TableHeaderColumn>
 </BootstrapTable>
-
-<BootstrapTable
-  keyField = "_id"
-  data={ doc.skillData }
-  columns={ this.getSkillDataPointColumns() }
-  cellEdit={ cellEditFactory(this.cellEditProp) }
-  insertRow={ true } />
-
-
-    <form ref={form => (this.form = form)} onSubmit={event => event.preventDefault()}>
-      <FormGroup>
-        <ControlLabel>Title</ControlLabel>
-        <input
-          type="text"
-          className="form-control"
-          name="title"
-          ref={title => (this.title = title)}
-          defaultValue={doc && doc.title}
-          placeholder="Oh, The Places You'll Go!"
-        />
-      </FormGroup>
-      <FormGroup>
-        <ControlLabel>Body</ControlLabel>
-        <textarea
-          className="form-control"
-          name="body"
-          ref={body => (this.body = body)}
-          defaultValue={doc && doc.body}
-          placeholder="Congratulations! Today is your day. You're off to Great Places! You're off and away!"
-        />
-      </FormGroup>
-      <Button type="submit" bsStyle="success">
-        {doc && doc._id ? 'Save Changes' : 'Add UserSkill'}
-      </Button>
-    </form>
 */}

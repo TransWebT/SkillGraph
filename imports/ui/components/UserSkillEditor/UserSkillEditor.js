@@ -13,10 +13,10 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 
 const testSkillData = [
-    { id: 1, evalDate: '12/1987', score: 5 },
-    { id: 2, evalDate: '5/1994', score: 2 },
-    { id: 3, evalDate: '9/2012', score: 8 },
-    { id: 4, evalDate: '3/2018', score: 6 }
+    { evalDate: '12/1987', score: 5 },
+    { evalDate: '5/1994', score: 2 },
+    { evalDate: '9/2012', score: 8 },
+    { evalDate: '3/2018', score: 6 }
 ];
 
 function onAfterDeleteRow(rowKeys, rows) {
@@ -145,7 +145,7 @@ class UserSkillEditor extends React.Component {
     return (
       <form ref={form => (this.form = form)} onSubmit={event => event.preventDefault()}>
         <FormGroup>
-          <ControlLabel>Title</ControlLabel>
+          <ControlLabel>Select Skill</ControlLabel>
           <Select
                 name="form-field-name"
                 value={value}
@@ -155,7 +155,7 @@ class UserSkillEditor extends React.Component {
         </FormGroup>
 
         <FormGroup>
-            <ControlLabel>Title</ControlLabel>
+            <ControlLabel>Skill Data for Selected Skill</ControlLabel>
             <BootstrapTable
                 data= { testSkillData }
                 insertRow={ true }
@@ -164,8 +164,7 @@ class UserSkillEditor extends React.Component {
                 selectRow={ this.selectRowProp }
                 options={ options }
             >
-                <TableHeaderColumn dataField='id' isKey={ true }>Skill Data point Id</TableHeaderColumn>
-                <TableHeaderColumn dataField='evalDate'>Eval Date (MM/YYYY)</TableHeaderColumn>
+                <TableHeaderColumn dataField='evalDate' isKey={true}>Eval Date (MM/YYYY)</TableHeaderColumn>
                 <TableHeaderColumn dataField='score'>Score</TableHeaderColumn>
             </BootstrapTable>
         </FormGroup>
@@ -191,6 +190,16 @@ export default UserSkillEditor;
 
 
 {/*
+
+  <TableHeaderColumn dataField='id' isKey={ true }>Skill Data point Id</TableHeaderColumn>
+  const testSkillData = [
+      { id: 1, evalDate: '12/1987', score: 5 },
+      { id: 2, evalDate: '5/1994', score: 2 },
+      { id: 3, evalDate: '9/2012', score: 8 },
+      { id: 4, evalDate: '3/2018', score: 6 }
+  ];
+
+
     const jobs = [];
     const jobTypes = [ 'A', 'B', 'C', 'D' ];
 

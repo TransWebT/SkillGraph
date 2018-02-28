@@ -27,14 +27,17 @@ const options = {
   afterDeleteRow: onAfterDeleteRow  // A hook for after droping rows.
 };
 
+
 class UserSkillEditor extends React.Component {
   constructor(props) {
      super(props);
      this.handleChange = this.handleChange.bind(this);
+     this.onAfterSaveCell = this.onAfterSaveCell.bind(this);
 
      this.cellEditProp = {
        mode: 'click',
-       blurToSave: true
+       blurToSave: true,
+       afterSaveCell: this.onAfterSaveCell
      };
 
      this.selectRowProp = {
@@ -78,6 +81,13 @@ class UserSkillEditor extends React.Component {
   handleChange(selectedOption) {
     this.setState({ selectedOption });
     console.log(`Selected: ${selectedOption.label}`);
+  }
+
+
+   onAfterSaveCell(row, cellName, cellValue) {
+    console.log(`Save cell ${cellName} with value ${cellValue}`);
+    console.log('The whole row :');
+    console.log(row);
   }
 
   getSkillOptions() {

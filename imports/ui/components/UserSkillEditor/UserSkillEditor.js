@@ -12,13 +12,6 @@ import 'react-select/dist/react-select.css';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 
-const testSkillData = [
-    { id: 1, evalDate: '12/1987', score: 5 },
-    { id: 2, evalDate: '5/1994', score: 2 },
-    { id: 3, evalDate: '9/2012', score: 8 },
-    { id: 4, evalDate: '3/2018', score: 6 }
-];
-
 function onAfterDeleteRow(rowKeys, rows) {
   alert('The rowkey you drop: ' + rowKeys);
 }
@@ -44,10 +37,16 @@ class UserSkillEditor extends React.Component {
        mode: 'checkbox'
      };
 
-     this.state = {
+    this.state = {
        selectedOption: '',
-      };
+    };
 
+    this.testSkillData = [
+          { id: 1, evalDate: '12/1987', score: 5 },
+          { id: 2, evalDate: '5/1994', score: 2 },
+          { id: 3, evalDate: '9/2012', score: 8 },
+          { id: 4, evalDate: '3/2018', score: 6 }
+      ];
    }
 
   componentDidMount() {
@@ -102,6 +101,7 @@ class UserSkillEditor extends React.Component {
     const { history } = this.props;
     const existingUserSkill = this.props.doc && this.props.doc._id;
     const methodToCall = existingUserSkill ? 'userSkills.update' : 'userSkills.insert';
+    console.log(this.testSkillData);
     const doc = {
       skillId: this.state.selectedOption.value.trim(),
       skillData: [
@@ -167,7 +167,8 @@ class UserSkillEditor extends React.Component {
         <FormGroup>
             <ControlLabel>Skill Data for Selected Skill</ControlLabel>
             <BootstrapTable
-                data= { testSkillData }
+                data= { this.testSkillData }
+                exportCSV
                 keyField='id'
                 insertRow={ true }
                 cellEdit={ this.cellEditProp }

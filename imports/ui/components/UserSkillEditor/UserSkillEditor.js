@@ -13,7 +13,7 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 
 function onAfterDeleteRow(rowKeys, rows) {
-  alert('The rowkey you drop: ' + rowKeys);
+  console.log('The rowkey you drop: ' + rowKeys);
 }
 
 const options = {
@@ -82,7 +82,6 @@ class UserSkillEditor extends React.Component {
     console.log(`Selected: ${selectedOption.label}`);
   }
 
-
    onAfterSaveCell(row, cellName, cellValue) {
     console.log(`Save cell ${cellName} with value ${cellValue}`);
     console.log('The whole row :');
@@ -101,14 +100,17 @@ class UserSkillEditor extends React.Component {
     const { history } = this.props;
     const existingUserSkill = this.props.doc && this.props.doc._id;
     const methodToCall = existingUserSkill ? 'userSkills.update' : 'userSkills.insert';
-    console.log(this.testSkillData);
+console.log(this.refs.table.store.data);
     const doc = {
       skillId: this.state.selectedOption.value.trim(),
+      skillData: this.refs.table.store.data
+      /*
       skillData: [
         { evalDate: new Date().toString(), score: 5 },
         { evalDate: new Date().toString(), score: 2 },
         { evalDate: new Date().toString(), score: 8 },
       ],
+      */
     };
 
     if (existingUserSkill) doc._id = existingUserSkill;
@@ -134,8 +136,6 @@ class UserSkillEditor extends React.Component {
     console.log(`${cell} at row id: ${row.id} in current editing`);
     return 'editing-jobstatus-class';
   }
-
-
 
   render() {
     const { doc } = this.props;
@@ -167,6 +167,7 @@ class UserSkillEditor extends React.Component {
         <FormGroup>
             <ControlLabel>Skill Data for Selected Skill</ControlLabel>
             <BootstrapTable
+                ref='table'
                 data= { this.testSkillData }
                 exportCSV
                 keyField='id'

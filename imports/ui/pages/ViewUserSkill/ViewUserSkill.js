@@ -24,7 +24,7 @@ const handleRemove = (userSkillId, history) => {
 const renderUserSkill = (doc, match, history) => (doc ? (
   <div className="ViewUserSkill">
     <div className="page-header clearfix">
-      <h4 className="pull-left">{ doc && doc.title }</h4>
+      <h4 className="pull-left">{ doc && doc.skillName() }</h4>
       <ButtonToolbar className="pull-right">
         <ButtonGroup bsSize="small">
           <Button onClick={() => history.push(`${match.url}/edit`)}>Edit</Button>

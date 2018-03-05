@@ -35,7 +35,8 @@ const UserSkills = ({
       <Table responsive>
         <thead>
           <tr>
-            <th>Title</th>
+            <th>Person</th>
+            <th>Skill</th>
             <th>Last Updated</th>
             <th>Created</th>
             <th />
@@ -44,10 +45,11 @@ const UserSkills = ({
         </thead>
         <tbody>
           {userSkills.map(({
-            _id, title, createdAt, updatedAt,
+            _id, owner, skillId, createdAt, updatedAt,
           }) => (
             <tr key={_id}>
-              <td>{title}</td>
+              <td>{owner}</td>
+              <td>{skillId}</td>
               <td>{timeago(updatedAt)}</td>
               <td>{monthDayYearAtTime(createdAt)}</td>
               <td>

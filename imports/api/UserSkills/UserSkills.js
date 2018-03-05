@@ -18,6 +18,16 @@ UserSkills.deny({
   remove: () => true,
 });
 
+UserSkills.helpers({
+    skillName() {
+        return Skills.findOne(this.skillId).name;
+    },
+    ownerFullname() {
+        const ownerProfile = Meteor.users.findOne(this.owner).profile;
+        return `${ownerProfile.name.first} ${ownerProfile.name.last}`;
+    }
+});
+
 export const SkillDataPointSchema = new SimpleSchema({
     evalDate: {
         type: String

@@ -8,16 +8,7 @@ import { Bert } from 'meteor/themeteorchef:bert';
 import validate from '../../../modules/validate';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
-// import { MonthPickerInput } from 'react-month-picker-input';
-// import 'react-month-picker-input/dist/react-month-picker-input.css';
-// var MonthPickerInput = require('react-month-picker-input');
-// require('react-month-picker-input/dist/react-month-picker-input.css');
-// var MonthPickerInput = require('tm-react-month-picker-input');
-// require('tm-react-month-picker-input/dist/react-month-picker-input.css');
-import YearMonthSelector from 'react-year-month-selector';
-import 'react-year-month-selector/dist/react-year-month-selector.css';
-
-
+import MaskedInput from 'react-text-mask';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 
@@ -174,13 +165,9 @@ console.log(this.refs.table.store.data);
         </FormGroup>
 
         <FormGroup> Date:
-          <YearMonthSelector
-            year={2018}
-            month={1}
-            onChange={(year, month)=> console.log(month)}
-            open={this.state.open}
-            onClose={this.handleClose}
-          />
+        <MaskedInput
+              mask={['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
+            />
         </FormGroup>
 
         <FormGroup>

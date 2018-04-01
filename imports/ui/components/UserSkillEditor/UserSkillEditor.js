@@ -8,9 +8,11 @@ import { Bert } from 'meteor/themeteorchef:bert';
 import validate from '../../../modules/validate';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
-import MaskedInput from 'react-text-mask';
+// import MaskedInput from 'react-text-mask';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
+import Cleave from 'cleave.js/react';
+
 
 function onAfterDeleteRow(rowKeys, rows) {
   console.log('The rowkey you drop: ' + rowKeys);
@@ -81,6 +83,15 @@ class UserSkillEditor extends React.Component {
     this.setState({ selectedOption });
     console.log(`Selected: ${selectedOption.label}`);
   }
+
+  onDateChange(event) {
+        // formatted pretty value
+        console.log(event.target.value);
+
+        // raw value
+        console.log(event.target.rawValue);
+    }
+
 
    onAfterSaveCell(row, cellName, cellValue) {
     console.log(`Save cell ${cellName} with value ${cellValue}`);
@@ -165,9 +176,9 @@ console.log(this.refs.table.store.data);
         </FormGroup>
 
         <FormGroup> Date:
-        <MaskedInput
-              mask={['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
-            />
+        <Cleave placeholder="MM/YYYY"
+                        options={{date: true, datePattern: ['m', 'Y']}}
+                        onChange={this.onDateChange.bind(this)} />
         </FormGroup>
 
         <FormGroup>
@@ -210,6 +221,11 @@ export default UserSkillEditor;
 
 
 {/*
+
+    <MaskedInput
+          mask={[/(19[5-9]\d|20[0-4]\d|2050)d/]}
+          placeholder="YYYY-MM"
+        />
 
     const jobs = [];
     const jobTypes = [ 'A', 'B', 'C', 'D' ];

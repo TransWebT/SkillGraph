@@ -23,6 +23,33 @@ const options = {
 };
 
 
+class EvalDateEditor extends React.Component {
+  constructor(props) {
+    super(props);
+    this.onUpdateData = this.onUpdateData.bind(this);
+    this.state = { evalDate: props.defaultValue };
+  }
+  focus() {
+  }
+
+  onUpdateData() {
+    this.props.onUpdate(this.state.evalDate);
+  }
+
+  render() {
+    return (
+        <Cleave placeholder="MM/YYYY"
+                options={{date: true, datePattern: ['m', 'Y']}}
+                onBlur={this.onUpdateData.bind(this)} />
+    );
+  }
+}
+
+/* ToDo: change this to an evalDateFormatter */
+// const evalDateFormatter = (cell, row) => (<span>{ (cell || []).join(',') }</span>);
+const createEvalDateEditor = (onUpdate, props) => (<EvalDateEditor onUpdate={ onUpdate } {...props}/>);
+
+
 class UserSkillEditor extends React.Component {
   constructor(props) {
      super(props);
@@ -195,7 +222,10 @@ console.log(this.refs.table.store.data);
                 options={ options }
             >
                 <TableHeaderColumn dataField='id' hidden autoValue>Id</TableHeaderColumn>
-                <TableHeaderColumn dataField='evalDate'>Eval Date (MM/YYYY)</TableHeaderColumn>
+                <TableHeaderColumn
+                    dataField='evalDate'
+                    customEditor={ { getElement: createEvalDateEditor } }
+                >Eval Date (MM/YYYY)</TableHeaderColumn>
                 <TableHeaderColumn dataField='score'>Score</TableHeaderColumn>
             </BootstrapTable>
         </FormGroup>

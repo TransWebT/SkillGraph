@@ -12,7 +12,7 @@ import 'react-select/dist/react-select.css';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import Cleave from 'cleave.js/react';
-
+import moment from 'moment';
 
 function onAfterDeleteRow(rowKeys, rows) {
   console.log('The rowkey you drop: ' + rowKeys);
@@ -22,25 +22,38 @@ const options = {
   afterDeleteRow: onAfterDeleteRow  // A hook for after droping rows.
 };
 
+const evalDateFormatTemplate = 'YYYY-MM';
+
+// validator function pass the user input value and row object. In addition, a bool return value is expected
+function evalDateValidator(value, row) {
+  const response = { isValid: true, notification: { type: 'success', msg: '', title: '' } };
+  if (!moment(value, evalDateFormatTemplate, true).isValid()) {
+    response.isValid = false;
+    response.notification.type = 'error';
+    response.notification.msg = 'Eval Date must be in the format ' + evalDateFormatTemplate;
+    response.notification.title = 'Invalid Value';
+  }
+  return response;
+}
 
 class EvalDateEditor extends React.Component {
   constructor(props) {
     super(props);
-    this.onUpdateData = this.onUpdateData.bind(this);
+    this.onUpdateField = this.onUpdateField.bind(this);
     this.state = { evalDate: props.defaultValue };
   }
   focus() {
   }
 
-  onUpdateData() {
-    this.props.onUpdate(this.state.evalDate);
+  onUpdateField(event) {
+    this.props.onUpdate( event.target.value );
   }
 
   render() {
     return (
-        <Cleave placeholder="MM/YYYY"
-                options={{date: true, datePattern: ['m', 'Y']}}
-                onBlur={this.onUpdateData.bind(this)} />
+        <Cleave placeholder={evalDateFormatTemplate}
+                options={{date: true, delimiter: '-', datePattern: ['Y', 'm']}}
+                onBlur={this.onUpdateField.bind(this)} />
     );
   }
 }
@@ -71,10 +84,10 @@ class UserSkillEditor extends React.Component {
     };
 
     this.testSkillData = [
-          { id: 1, evalDate: '12/1987', score: 5 },
-          { id: 2, evalDate: '5/1994', score: 2 },
-          { id: 3, evalDate: '9/2012', score: 8 },
-          { id: 4, evalDate: '3/2018', score: 6 }
+          { id: 1, evalDate: '1987-12', score: 5 },
+          { id: 2, evalDate: '1994-05', score: 2 },
+          { id: 3, evalDate: '2012-03', score: 8 },
+          { id: 4, evalDate: '2018-01', score: 6 }
       ];
    }
 
@@ -184,7 +197,7 @@ console.log(this.refs.table.store.data);
     // const value = doc && doc.skillId;
     const value = this.state.selectedOption.value;
 
-    // ToDo: reactive table evalDate field needs to be a selector for MM-YYYY - consider cellEdit example
+    // ToDo: reactive table evalDate field needs to be a selector for YYYY/MM - consider cellEdit example
     //    Date picker candidates:
     //       https://github.com/airbnb/react-dates
     //       https://github.com/Hacker0x01/react-datepicker
@@ -203,8 +216,8 @@ console.log(this.refs.table.store.data);
         </FormGroup>
 
         <FormGroup> Date:
-        <Cleave placeholder="MM/YYYY"
-                        options={{date: true, datePattern: ['m', 'Y']}}
+        <Cleave placeholder={evalDateFormatTemplate}
+                        options={{date: true, datePattern: ['Y', 'm']}}
                         onChange={this.onDateChange.bind(this)} />
         </FormGroup>
 
@@ -225,7 +238,8 @@ console.log(this.refs.table.store.data);
                 <TableHeaderColumn
                     dataField='evalDate'
                     customEditor={ { getElement: createEvalDateEditor } }
-                >Eval Date (MM/YYYY)</TableHeaderColumn>
+                    editable={ { validator: evalDateValidator } }
+                >Eval Date {evalDateFormatTemplate}</TableHeaderColumn>
                 <TableHeaderColumn dataField='score'>Score</TableHeaderColumn>
             </BootstrapTable>
         </FormGroup>
@@ -248,70 +262,3 @@ UserSkillEditor.propTypes = {
 };
 
 export default UserSkillEditor;
-
-
-{/*
-
-    <MaskedInput
-          mask={[/(19[5-9]\d|20[0-4]\d|2050)d/]}
-          placeholder="YYYY-MM"
-        />
-
-    const jobs = [];
-    const jobTypes = [ 'A', 'B', 'C', 'D' ];
-
-    function addJobs(quantity) {
-      const startId = jobs.length;
-      for (let i = 0; i < quantity; i++) {
-        const id = startId + i;
-        jobs.push({
-          id: id,
-          status: '200',
-          name: 'Item name ' + id,
-          type: 'Java',
-          active: i % 2 === 0 ? 'Y' : 'N'
-        });
-      }
-    }
-    addJobs(5);
-
-    // validator function pass the user input value and should return true|false.
-    function jobNameValidator(value) {
-      const response = { isValid: true, notification: { type: 'success', msg: '', title: '' } };
-      if (!value) {
-        response.isValid = false;
-        response.notification.type = 'error';
-        response.notification.msg = 'Value must be inserted';
-        response.notification.title = 'Requested Value';
-      } else if (value.length < 10) {
-        response.isValid = false;
-        response.notification.type = 'error';
-        response.notification.msg = 'Value must have 10+ characters';
-        response.notification.title = 'Invalid Value';
-      }
-      return response;
-    }
-
-    function jobStatusValidator(value) {
-      const nan = isNaN(parseInt(value, 10));
-      if (nan) {
-        return 'Job Status must be a integer!';
-      }
-      return true;
-    }
-
-      getSkillNames() {
-          const { skills } = this.props;
-          const skillNames = skills.map(function(a) {return a.name;});
-          return skillNames;
-      }
-
-
-    <BootstrapTable data={ doc } cellEdit={ cellEditProp } insertRow={ true }>
-         <TableHeaderColumn dataField='_id' isKey={ true }>User Skill ID</TableHeaderColumn>
-         <TableHeaderColumn dataField='status' editable={ { validator: jobStatusValidator } } editColumnClassName={ this.editingJobStatus } invalidEditColumnClassName={ this.invalidJobStatus }>Job Status</TableHeaderColumn>
-         <TableHeaderColumn dataField='name' editable={ { type: 'textarea', validator: jobNameValidator } } editColumnClassName='editing-jobsname-class' invalidEditColumnClassName='invalid-jobsname-class'>Job Name</TableHeaderColumn>
-         <TableHeaderColumn dataField='type' editable={ { type: 'select', options: { values: this.getSkillNames() } } }>Job Type</TableHeaderColumn>
-         <TableHeaderColumn dataField='active' editable={ { type: 'checkbox', options: { values: 'Y:N' } } }>Active</TableHeaderColumn>
-</BootstrapTable>
-*/}

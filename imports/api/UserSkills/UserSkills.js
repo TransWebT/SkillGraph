@@ -2,7 +2,9 @@
 
 import { Mongo } from 'meteor/mongo';
 import SimpleSchema from 'simpl-schema';
-import { Skills } from '/imports/api/Skills/Skills.js';
+import SkillsCollection from '../Skills/Skills.js';
+
+import { Documents } from '../Documents/Documents';
 
 const UserSkills = new Mongo.Collection('UserSkills');
 
@@ -19,22 +21,28 @@ UserSkills.deny({
 });
 
 UserSkills.helpers({
-    skillName() {
-        return Skills.findOne(this.skillId).name;
-    },
-    ownerFullname() {
-        const ownerProfile = Meteor.users.findOne(this.owner).profile;
-        return `${ownerProfile.name.first} ${ownerProfile.name.last}`;
-    }
+  skillName() {
+    const skillId = this.skillId;
+    const skill = SkillsCollection.findOne(skillId);
+    console.log(`FOUND SKILL:  + ${skill}`);
+    if (skill) return skill.name; else return '';
+  },
+  ownerFullname() {
+    const ownerProfile = Meteor.users.findOne(this.owner).profile;
+    return `${ownerProfile.name.first} ${ownerProfile.name.last}`;
+  },
 });
 
 export const SkillDataPointSchema = new SimpleSchema({
-    evalDate: {
-        type: String
-    },
-    score: {
-        type: Number
-    }
+  id: {
+    type: String
+  },
+  evalDate: {
+    type: String
+  },
+  score: {
+    type: Number
+  }
 });
 
 UserSkills.schema = new SimpleSchema({

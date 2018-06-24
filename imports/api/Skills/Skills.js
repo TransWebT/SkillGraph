@@ -3,7 +3,7 @@
 import { Mongo } from 'meteor/mongo';
 import SimpleSchema from 'simpl-schema';
 
-export const Skills = new Mongo.Collection('Skills');
+const Skills = new Mongo.Collection('Skills');
 
 Skills.allow({
   insert: () => false,

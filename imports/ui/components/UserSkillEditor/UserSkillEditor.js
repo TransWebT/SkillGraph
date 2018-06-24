@@ -152,6 +152,7 @@ class UserSkillEditor extends React.Component {
     const existingUserSkill = this.props.doc && this.props.doc._id;
     const methodToCall = existingUserSkill ? 'userSkills.update' : 'userSkills.insert';
 console.log(this.refs.table.store.data);
+console.log(existingUserSkill);
     const doc = {
       skillId: this.state.selectedOption.value.trim(),
       skillData: this.refs.table.store.data
@@ -215,17 +216,10 @@ console.log(this.refs.table.store.data);
               />
         </FormGroup>
 
-        <FormGroup> Date:
-        <Cleave placeholder={evalDateFormatTemplate}
-                        options={{date: true, datePattern: ['Y', 'm']}}
-                        onChange={this.onDateChange.bind(this)} />
-        </FormGroup>
-
         <FormGroup>
             <ControlLabel>Skill Data for Selected Skill</ControlLabel>
             <BootstrapTable
                 ref='table'
-                data= { this.testSkillData }
                 exportCSV
                 keyField='id'
                 insertRow={ true }
@@ -251,6 +245,18 @@ console.log(this.refs.table.store.data);
     );
   }
 }
+
+/*
+// this goes in the BootstrapTable getElement
+data= { this.testSkillData  }
+
+<FormGroup> Date:
+<Cleave placeholder={evalDateFormatTemplate}
+                options={{date: true, datePattern: ['Y', 'm']}}
+                onChange={this.onDateChange.bind(this)} />
+</FormGroup>
+
+*/
 
 UserSkillEditor.defaultProps = {
   doc: { skillId: '', skillData: [] },

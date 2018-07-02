@@ -24,7 +24,6 @@ UserSkills.helpers({
   skillName() {
     const skillId = this.skillId;
     const skill = SkillsCollection.findOne(skillId);
-    console.log(`FOUND SKILL:  + ${skill}`);
     if (skill) return skill.name; else return '';
   },
   ownerFullname() {

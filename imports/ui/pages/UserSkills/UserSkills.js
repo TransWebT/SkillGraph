@@ -6,6 +6,7 @@ import { Meteor } from 'meteor/meteor';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Bert } from 'meteor/themeteorchef:bert';
 import UserSkillsCollection from '../../../api/UserSkills/UserSkills';
+// import SkillsCollection from '../../../api/Skills/Skills';
 import { timeago, monthDayYearAtTime } from '../../../modules/dates';
 import Loading from '../../components/Loading/Loading';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
@@ -74,18 +75,16 @@ const UserSkills = ({
           </tr>
         </thead>
         <tbody>
-          {userSkills.map(({
-            _id, owner, skillId, createdAt, updatedAt,
-          }) => (
-            <tr key={_id}>
-              <td>{owner}</td>
-              <td>{skillId}</td>
-              <td>{timeago(updatedAt)}</td>
-              <td>{monthDayYearAtTime(createdAt)}</td>
+          {userSkills.map((userSkill) => (
+            <tr key={userSkill._id}>
+              <td>{userSkill.owner}</td>
+              <td>{userSkill.skillName()}</td>
+              <td>{timeago(userSkill.updatedAt)}</td>
+              <td>{monthDayYearAtTime(userSkill.createdAt)}</td>
               <td>
                 <Button
                   bsStyle="primary"
-                  onClick={() => history.push(`${match.url}/${_id}`)}
+                  onClick={() => history.push(`${match.url}/${userSkill._id}`)}
                   block
                 >
                   View
@@ -115,9 +114,10 @@ UserSkills.propTypes = {
 };
 
 export default withTracker(() => {
-  const subscription = Meteor.subscribe('userSkills');
+  const userSkillsSub = Meteor.subscribe('userSkills');
+  const skillsSub = Meteor.subscribe('skills');
   return {
-    loading: !subscription.ready(),
+    loading: !(userSkillsSub.ready() && skillsSub.ready()),
     userSkills: UserSkillsCollection.find().fetch(),
   };
 })(UserSkills);

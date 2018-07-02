@@ -57,10 +57,12 @@ ViewUserSkill.propTypes = {
 
 export default withTracker(({ match }) => {
   const userSkillId = match.params._id;
-  const subscription = Meteor.subscribe('userSkills.view', userSkillId);
 
+  const userSkillsSub = Meteor.subscribe('userSkills.view', userSkillId);
+  const skillsSub = Meteor.subscribe('skills');
   return {
-    loading: !subscription.ready(),
+    loading: !(userSkillsSub.ready() && skillsSub.ready()),
     doc: UserSkills.findOne(userSkillId),
   };
+  
 })(ViewUserSkill);
